@@ -2248,8 +2248,8 @@
       "use strict";
       init_asyncIteratorSymbol();
       init_promiseAllSettled();
-      DISCORD_SERVER = "https://discord.gg/XjYgWXHb9Q";
-      GITHUB = "https://github.com/schat-mod";
+      DISCORD_SERVER = "https://discord.gg/uqbQvAHHve";
+      GITHUB = "https://github.com/Soncresity-Industries/SChat-Tweak";
       HTTP_REGEX = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/;
       HTTP_REGEX_MULTI = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
       SCHAT_PROXY_PREFIX = "https://bn-plugins.github.io/vd-proxy";
@@ -4554,7 +4554,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "9cd7738-main";
+      versionHash = "e5e1f00-main";
     }
   });
 
@@ -7525,7 +7525,7 @@
         pluginFetch(url2) {
           return _async_to_generator(function* () {
             if (url2.startsWith(VD_PROXY_PREFIX)) {
-              url2 = url2.replace("https://soncresity-industries.github.io/plugins-proxy", SCHAT_PROXY_PREFIX).replace(VD_PROXY_PREFIX, SCHAT_PROXY_PREFIX);
+              url2 = url2.replace("https://bunny-mod.github.io/plugins-proxy", SCHAT_PROXY_PREFIX).replace(VD_PROXY_PREFIX, SCHAT_PROXY_PREFIX);
             }
             return yield safeFetch(url2, {
               cache: "no-store"
@@ -11225,7 +11225,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"9cd7738-main"})`
+          useTrailing: () => `(${"e5e1f00-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11722,7 +11722,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"9cd7738-main"}`,
+          `SChat: ${"e5e1f00-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
