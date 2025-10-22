@@ -4554,7 +4554,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "e5e1f00-main";
+      versionHash = "f4c160c-main";
     }
   });
 
@@ -11225,7 +11225,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"e5e1f00-main"})`
+          useTrailing: () => `(${"f4c160c-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11722,7 +11722,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"e5e1f00-main"}`,
+          `SChat: ${"f4c160c-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
