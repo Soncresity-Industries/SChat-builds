@@ -3373,7 +3373,7 @@
       if (!isThemeSupported())
         return;
       try {
-        if (isPyonLoader()) {
+        if (isSChatLoader()) {
           writeFile("../vendetta_theme.json", "null");
         }
         yield awaitStorage2(colorsPref);
@@ -3411,14 +3411,14 @@
   function isVendettaLoader() {
     return vendettaLoaderIdentity != null;
   }
-  function isPyonLoader() {
-    return pyonLoaderIdentity != null;
+  function isSChatLoader() {
+    return schatLoaderIdentity != null;
   }
   function polyfillVendettaLoaderIdentity() {
-    if (!isPyonLoader() || isVendettaLoader())
+    if (!isSChatLoader() || isVendettaLoader())
       return null;
     var loader = {
-      name: pyonLoaderIdentity.loaderName,
+      name: schatLoaderIdentity.loaderName,
       features: {}
     };
     if (isLoaderConfigSupported())
@@ -3460,19 +3460,19 @@
     return polyfillVendettaLoaderIdentity();
   }
   function getLoaderName() {
-    if (isPyonLoader())
-      return pyonLoaderIdentity.loaderName;
+    if (isSChatLoader())
+      return schatLoaderIdentity.loaderName;
     else if (isVendettaLoader())
       return vendettaLoaderIdentity.name;
     return "Unknown";
   }
   function getLoaderVersion() {
-    if (isPyonLoader())
-      return pyonLoaderIdentity.loaderVersion;
+    if (isSChatLoader())
+      return schatLoaderIdentity.loaderVersion;
     return null;
   }
   function isLoaderConfigSupported() {
-    if (isPyonLoader()) {
+    if (isSChatLoader()) {
       return true;
     } else if (isVendettaLoader()) {
       return vendettaLoaderIdentity.features.loaderConfig;
@@ -3480,16 +3480,16 @@
     return false;
   }
   function isThemeSupported() {
-    if (isPyonLoader()) {
-      return pyonLoaderIdentity.hasThemeSupport;
+    if (isSChatLoader()) {
+      return schatLoaderIdentity.hasThemeSupport;
     } else if (isVendettaLoader()) {
       return vendettaLoaderIdentity.features.themes != null;
     }
     return false;
   }
   function getStoredTheme() {
-    if (isPyonLoader()) {
-      return pyonLoaderIdentity.storedTheme;
+    if (isSChatLoader()) {
+      return schatLoaderIdentity.storedTheme;
     } else if (isVendettaLoader()) {
       var themeProp = vendettaLoaderIdentity.features.themes?.prop;
       if (!themeProp)
@@ -3499,7 +3499,7 @@
     return null;
   }
   function getThemeFilePath() {
-    if (isPyonLoader()) {
+    if (isSChatLoader()) {
       return "schat/current-theme.json";
     } else if (isVendettaLoader()) {
       return "vendetta_theme.json";
@@ -3507,7 +3507,7 @@
     return null;
   }
   function isReactDevToolsPreloaded() {
-    if (isPyonLoader()) {
+    if (isSChatLoader()) {
       return Boolean(window.__reactDevTools);
     }
     if (isVendettaLoader()) {
@@ -3518,7 +3518,7 @@
   function getReactDevToolsProp() {
     if (!isReactDevToolsPreloaded())
       return null;
-    if (isPyonLoader()) {
+    if (isSChatLoader()) {
       window.__schat_rdt = window.__reactDevTools.exports;
       return "__schat_rdt";
     }
@@ -3530,7 +3530,7 @@
   function getReactDevToolsVersion() {
     if (!isReactDevToolsPreloaded())
       return null;
-    if (isPyonLoader()) {
+    if (isSChatLoader()) {
       return window.__reactDevTools.version || null;
     }
     if (isVendettaLoader()) {
@@ -3539,8 +3539,8 @@
     return null;
   }
   function isSysColorsSupported() {
-    if (isPyonLoader())
-      return pyonLoaderIdentity.isSysColorsSupported;
+    if (isSChatLoader())
+      return schatLoaderIdentity.isSysColorsSupported;
     else if (isVendettaLoader()) {
       return vendettaLoaderIdentity.features.syscolors != null;
     }
@@ -3549,15 +3549,15 @@
   function getSysColors() {
     if (!isSysColorsSupported())
       return null;
-    if (isPyonLoader()) {
-      return pyonLoaderIdentity.sysColors;
+    if (isSChatLoader()) {
+      return schatLoaderIdentity.sysColors;
     } else if (isVendettaLoader()) {
       return vendettaLoaderIdentity.features.syscolors.prop;
     }
     return null;
   }
   function getLoaderConfigPath() {
-    if (isPyonLoader()) {
+    if (isSChatLoader()) {
       return "schat/loader.json";
     } else if (isVendettaLoader()) {
       return "vendetta_loader.json";
@@ -3565,17 +3565,17 @@
     return "loader.json";
   }
   function isFontSupported() {
-    if (isPyonLoader())
-      return pyonLoaderIdentity.fontPatch === 2;
+    if (isSChatLoader())
+      return schatLoaderIdentity.fontPatch === 2;
     return false;
   }
-  var pyonLoaderIdentity, vendettaLoaderIdentity;
+  var schatLoaderIdentity, vendettaLoaderIdentity;
   var init_loader = __esm({
     "src/lib/api/native/loader.ts"() {
       "use strict";
       init_asyncIteratorSymbol();
       init_promiseAllSettled();
-      pyonLoaderIdentity = globalThis.__PYON_LOADER__;
+      schatLoaderIdentity = globalThis.__SCHAT_LOADER__;
       vendettaLoaderIdentity = globalThis.__vendetta_loader;
       getVendettaLoaderIdentity();
     }
@@ -4554,7 +4554,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "f4c160c-main";
+      versionHash = "2b3fdef-main";
     }
   });
 
@@ -11225,7 +11225,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"f4c160c-main"})`
+          useTrailing: () => `(${"2b3fdef-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11510,7 +11510,7 @@
             awaitSyncWrapper: (store) => awaitStorage(store),
             createMMKVBackend: (store) => createMMKVBackend(store),
             createFileBackend: (file) => {
-              if (isPyonLoader() && file === "vendetta_theme.json") {
+              if (isSChatLoader() && file === "vendetta_theme.json") {
                 file = "schat/current-theme.json";
               }
               return createFileBackend(file);
@@ -11722,7 +11722,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"f4c160c-main"}`,
+          `SChat: ${"2b3fdef-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
