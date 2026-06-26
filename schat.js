@@ -4355,7 +4355,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "9248f57-main";
+      versionHash = "b243c2f-main";
     }
   });
 
@@ -5536,7 +5536,8 @@
     });
     unpatches.push(after("default", SettingsOverviewScreen, (_2, ret) => {
       if (useIsFirstRender()) return;
-      var { sections } = findInReactTree(ret, (i) => i.props?.sections).props;
+      var target = findInReactTree(ret, (i) => i.props?.sections || i.props?.node?.sections);
+      var sections = target.props.sections ?? target.props.node.sections;
       var index = -~sections.findIndex((i) => i.settings.includes("ACCOUNT")) || 1;
       Object.keys(registeredSections).forEach((sect) => {
         sections.splice(index++, 0, {
@@ -10856,7 +10857,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"9248f57-main"})`
+          useTrailing: () => `(${"b243c2f-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11348,7 +11349,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"9248f57-main"}`,
+          `SChat: ${"b243c2f-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
