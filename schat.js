@@ -4364,7 +4364,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "49d584b-main";
+      versionHash = "4437fbe-main";
     }
   });
 
@@ -10893,7 +10893,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"49d584b-main"})`
+          useTrailing: () => `(${"4437fbe-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11337,20 +11337,21 @@
       init_settings2();
       init_lib();
       index_default = /* @__PURE__ */ _async_to_generator(function* () {
-        var initialization = yield allSettled([
-          initThemes(),
-          injectFluxInterceptor(),
-          patchSettings(),
-          patchLogHook(),
-          patchCommands(),
-          patchJsx(),
-          initVendettaObject(),
-          initFetchI18nStrings(),
-          initSettings(),
-          fixes_default(),
-          patchErrorBoundary(),
-          updatePlugins()
-        ]);
+        var initializers = [
+          initThemes,
+          injectFluxInterceptor,
+          patchSettings,
+          patchLogHook,
+          patchCommands,
+          patchJsx,
+          initVendettaObject,
+          initFetchI18nStrings,
+          initSettings,
+          fixes_default,
+          patchErrorBoundary,
+          updatePlugins
+        ];
+        var initialization = yield allSettled(initializers.map((initializer) => Promise.resolve().then(() => initializer())));
         initialization.forEach((result) => {
           if (result.status === "fulfilled") {
             if (result.value) unload.push(result.value);
@@ -11389,7 +11390,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"49d584b-main"}`,
+          `SChat: ${"4437fbe-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
