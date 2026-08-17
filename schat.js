@@ -4258,12 +4258,21 @@
     });
   }
   function patchLogHook() {
+    var isForwardingToDiscord = false;
     var unpatch = after("nativeLoggingHook", globalThis, (args) => {
       if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({
         message: args[0],
         level: args[1]
       }));
-      logger.log(args[0]);
+      if (isForwardingToDiscord) return;
+      var level = typeof args[1] === "string" ? args[1].toLowerCase() : "log";
+      var log = logger[level] ?? logger.log;
+      isForwardingToDiscord = true;
+      try {
+        log.call(logger, args[0]);
+      } finally {
+        isForwardingToDiscord = false;
+      }
     });
     return () => {
       socket && socket.close();
@@ -4355,7 +4364,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "c8710f3-main";
+      versionHash = "6f35627-main";
     }
   });
 
@@ -5478,10 +5487,27 @@
   });
 
   // src/lib/ui/settings/patches/tabs.tsx
-  function useIsFirstRender() {
-    var firstRender = false;
-    React.useEffect(() => void (firstRender = true), []);
-    return firstRender;
+  function findSettingsSections(root) {
+    var visited = /* @__PURE__ */ new Set();
+    function visit(value) {
+      if (!value || typeof value !== "object" && typeof value !== "function" || visited.has(value)) return;
+      visited.add(value);
+      if (Array.isArray(value)) {
+        if (value.some((section) => Array.isArray(section?.settings) && section.settings.includes("ACCOUNT"))) {
+          return value;
+        }
+        for (var item of value) {
+          var result = visit(item);
+          if (result) return result;
+        }
+        return;
+      }
+      for (var key of Object.keys(value)) {
+        var result1 = visit(value[key]);
+        if (result1) return result1;
+      }
+    }
+    return visit(root);
   }
   function patchTabsUI(unpatches) {
     var getRows = () => Object.values(registeredSections).flatMap((sect) => sect.map((row) => ({
@@ -5499,46 +5525,48 @@
         ...row.rawTabsConfig
       }
     }))).reduce((a, c2) => Object.assign(a, c2));
-    var origRendererConfig = settingConstants.SETTING_RENDERER_CONFIG;
-    var rendererConfigValue = settingConstants.SETTING_RENDERER_CONFIG;
-    Object.defineProperty(settingConstants, "SETTING_RENDERER_CONFIG", {
-      enumerable: true,
-      configurable: true,
-      get: () => ({
-        ...rendererConfigValue,
-        VendettaCustomPage: {
-          type: "route",
-          title: () => "SChat",
-          screen: {
-            route: "VendettaCustomPage",
-            getComponent: () => CustomPageRenderer
-          }
-        },
-        SCHAT_CUSTOM_PAGE: {
-          type: "route",
-          title: () => "SChat",
-          screen: {
-            route: "SCHAT_CUSTOM_PAGE",
-            getComponent: () => CustomPageRenderer
-          }
-        },
-        ...getRows()
-      }),
-      set: (v2) => rendererConfigValue = v2
-    });
-    unpatches.push(() => {
+    try {
+      var origRendererConfig = settingConstants.SETTING_RENDERER_CONFIG;
+      var rendererConfigValue = settingConstants.SETTING_RENDERER_CONFIG;
       Object.defineProperty(settingConstants, "SETTING_RENDERER_CONFIG", {
-        value: origRendererConfig,
-        writable: true,
-        get: void 0,
-        set: void 0
+        enumerable: true,
+        configurable: true,
+        get: () => ({
+          ...rendererConfigValue,
+          VendettaCustomPage: {
+            type: "route",
+            title: () => "SChat",
+            screen: {
+              route: "VendettaCustomPage",
+              getComponent: () => CustomPageRenderer
+            }
+          },
+          SCHAT_CUSTOM_PAGE: {
+            type: "route",
+            title: () => "SChat",
+            screen: {
+              route: "SCHAT_CUSTOM_PAGE",
+              getComponent: () => CustomPageRenderer
+            }
+          },
+          ...getRows()
+        }),
+        set: (v2) => rendererConfigValue = v2
       });
-    });
+      unpatches.push(() => {
+        Object.defineProperty(settingConstants, "SETTING_RENDERER_CONFIG", {
+          value: origRendererConfig,
+          writable: true,
+          get: void 0,
+          set: void 0
+        });
+      });
+    } catch (error) {
+      console.warn("Unable to patch the settings renderer configuration", error);
+    }
     unpatches.push(after("default", SettingsOverviewScreen, (_2, ret) => {
-      if (useIsFirstRender()) return;
-      var target = findInReactTree(ret, (i2) => Array.isArray(i2?.props?.sections) || Array.isArray(i2?.props?.node?.sections));
-      var sections = target?.props?.sections ?? target?.props?.node?.sections;
-      if (!Array.isArray(sections)) return;
+      var sections = findSettingsSections(ret);
+      if (!sections) return;
       var sectionNames = Object.keys(registeredSections);
       for (var i = sections.length - 1; i >= 0; i--) {
         var settings2 = sections[i]?.settings;
@@ -5565,7 +5593,6 @@
       init_promiseAllSettled();
       init_jsxRuntime();
       init_patcher();
-      init_utils();
       init_components();
       init_wrappers();
       init_settings2();
@@ -10866,7 +10893,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"c8710f3-main"})`
+          useTrailing: () => `(${"6f35627-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11358,7 +11385,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"c8710f3-main"}`,
+          `SChat: ${"6f35627-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
