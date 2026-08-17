@@ -4364,7 +4364,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "6f35627-main";
+      versionHash = "49d584b-main";
     }
   });
 
@@ -10893,7 +10893,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"6f35627-main"})`
+          useTrailing: () => `(${"49d584b-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11337,7 +11337,7 @@
       init_settings2();
       init_lib();
       index_default = /* @__PURE__ */ _async_to_generator(function* () {
-        yield Promise.all([
+        var initialization = yield allSettled([
           initThemes(),
           injectFluxInterceptor(),
           patchSettings(),
@@ -11350,10 +11350,14 @@
           fixes_default(),
           patchErrorBoundary(),
           updatePlugins()
-        ]).then(
-          // Push them all to unloader
-          (u) => u.forEach((f) => f && unload.push(f))
-        );
+        ]);
+        initialization.forEach((result) => {
+          if (result.status === "fulfilled") {
+            if (result.value) unload.push(result.value);
+          } else {
+            console.error("SChat initializer failed", result.reason);
+          }
+        });
         window.schat = lib_exports;
         VdPluginManager.initPlugins().then((u) => unload.push(u)).catch(() => alert("Failed to initialize Vendetta plugins"));
         initPlugins();
@@ -11385,7 +11389,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"6f35627-main"}`,
+          `SChat: ${"49d584b-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
