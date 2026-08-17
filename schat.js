@@ -4355,7 +4355,7 @@
       init_logger();
       init_toasts();
       import_react_native5 = __toESM(require_react_native());
-      versionHash = "b243c2f-main";
+      versionHash = "c8710f3-main";
     }
   });
 
@@ -5536,10 +5536,19 @@
     });
     unpatches.push(after("default", SettingsOverviewScreen, (_2, ret) => {
       if (useIsFirstRender()) return;
-      var target = findInReactTree(ret, (i) => i.props?.sections || i.props?.node?.sections);
-      var sections = target.props.sections ?? target.props.node.sections;
-      var index = -~sections.findIndex((i) => i.settings.includes("ACCOUNT")) || 1;
-      Object.keys(registeredSections).forEach((sect) => {
+      var target = findInReactTree(ret, (i2) => Array.isArray(i2?.props?.sections) || Array.isArray(i2?.props?.node?.sections));
+      var sections = target?.props?.sections ?? target?.props?.node?.sections;
+      if (!Array.isArray(sections)) return;
+      var sectionNames = Object.keys(registeredSections);
+      for (var i = sections.length - 1; i >= 0; i--) {
+        var settings2 = sections[i]?.settings;
+        if (sectionNames.includes(sections[i]?.label) || Array.isArray(settings2) && settings2.some((key) => Object.values(registeredSections).some((rows) => rows.some((row) => row.key === key)))) {
+          sections.splice(i, 1);
+        }
+      }
+      var accountIndex = sections.findIndex((section) => Array.isArray(section?.settings) && section.settings.includes("ACCOUNT"));
+      var index = accountIndex >= 0 ? accountIndex + 1 : 1;
+      sectionNames.forEach((sect) => {
         sections.splice(index++, 0, {
           label: sect,
           title: sect,
@@ -10857,7 +10866,7 @@
             uri: si_default
           },
           render: () => Promise.resolve().then(() => (init_General(), General_exports)),
-          useTrailing: () => `(${"b243c2f-main"})`
+          useTrailing: () => `(${"c8710f3-main"})`
         },
         {
           key: "SCHAT_PLUGINS",
@@ -11349,7 +11358,7 @@
         alert([
           "Failed to load SChat!\n",
           `Build Number: ${ClientInfoManager.Build}`,
-          `SChat: ${"b243c2f-main"}`,
+          `SChat: ${"c8710f3-main"}`,
           stack || e?.toString?.()
         ].join("\n"));
       }
